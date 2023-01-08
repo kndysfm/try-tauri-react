@@ -16,11 +16,11 @@ struct MyOption {
 }
 
 fn info_to_option(info: &&DeviceInfo) -> MyOption {
+    let path = info.path().to_str().unwrap().to_string();
     let text = format!("PID:{:04X}_VID:{:04X}&UP:{:04X}_U:{:04X}", 
         info.vendor_id(), info.product_id(),
         info.usage_page(), info.usage()); 
-    let path = info.path().to_str().unwrap().to_string();
-    MyOption {label: text, id: path}
+    MyOption {id: path, label: text}
 }
 
 fn new_hidapi() -> HidApi { HidApi::new().expect("Failed to create `HidApi`") }

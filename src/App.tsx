@@ -9,12 +9,7 @@ class MyOption {
 }
 
 function App() {
-  const [options, setOptions] = useState<MyOption[]>([
-    {id: "[0]", label: "PID:0000_VID:0000&UP:0000_U:0000"},
-    {id: "[1]", label: "PID:0000_VID:0000&UP:0000_U:0001"},
-    {id: "[2]", label: "PID:0000_VID:0000&UP:0000_U:0002"},
-    {id: "[3]", label: "PID:0000_VID:0000&UP:0000_U:0003"},
-  ]);
+  const [options, setOptions] = useState<MyOption[]>([]);
   const [productName, setProductName] = useState<string>("");
   
   async function enum_hid() {
@@ -22,7 +17,6 @@ function App() {
   }
 
   async function sel_hid(id: string) {
-    // setProductName(newId); return;
     setProductName(await invoke("sel_hid", {path: id}));
   }
 
