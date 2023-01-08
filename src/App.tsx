@@ -3,13 +3,27 @@ import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+class MyOption {
+  id: string = "";
+  label: string = "";
+}
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
+function App() {
+  const [options, setOptions] = useState<MyOption[]>([
+    {id: "[0]", label: "PID:0000_VID:0000&UP:0000_U:0000"},
+    {id: "[1]", label: "PID:0000_VID:0000&UP:0000_U:0001"},
+    {id: "[2]", label: "PID:0000_VID:0000&UP:0000_U:0002"},
+    {id: "[3]", label: "PID:0000_VID:0000&UP:0000_U:0003"},
+  ]);
+  const [productName, setProductName] = useState<string>("");
+  
+  async function enum_hid() {
+    setOptions(await invoke("enum_hid"));
+  }
+
+  async function sel_hid(id: string) {
+    // setProductName(newId); return;
+    setProductName(await invoke("sel_hid", {path: id}));
   }
 
   return (
@@ -32,17 +46,17 @@ function App() {
 
       <div className="row">
         <div>
-          <input
-            id="greet-input"
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="Enter a name..."
-          />
-          <button type="button" onClick={() => greet()}>
-            Greet
+          <button type="button" onClick={() => enum_hid()}>
+            Enumerate HID
           </button>
+          <select onChange={(e) => sel_hid(e.target.value)}>
+            {options.map((opt, idx) => {
+              return <option value={opt.id}>[{idx}] {opt.label}</option>
+            })}
+          </select>
         </div>
       </div>
-      <p>{greetMsg}</p>
+      <p>🤛{productName}🤜</p>
     </div>
   );
 }
