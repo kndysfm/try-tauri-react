@@ -3,10 +3,20 @@
     windows_subsystem = "windows"
 )]
 
+extern crate hidapi;
+use hidapi::{HidApi};
+
+fn count_hid() -> usize {
+    match HidApi::new() {
+        Ok(api) => api.device_list().count(),
+        Err(_) => 0,
+    }
+}
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+    format!("Hello, {}! I have {} HID devices", name, count_hid())
 }
 
 fn main() {

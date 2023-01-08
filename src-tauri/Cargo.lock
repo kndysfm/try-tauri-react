@@ -1023,6 +1023,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "hidapi"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a090a12b53564bcb2f6053b8be08d5f9e7b91f26953d6e8e08c9affd8aeb4ec9"
+dependencies = [
+ "cc",
+ "libc",
+ "pkg-config",
+ "winapi",
+]
+
+[[package]]
 name = "html5ever"
 version = "0.25.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2977,6 +2989,7 @@ dependencies = [
 name = "try-tauri-react"
 version = "0.0.0"
 dependencies = [
+ "hidapi",
  "serde",
  "serde_json",
  "tauri",
