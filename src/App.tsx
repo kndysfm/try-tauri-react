@@ -1,6 +1,7 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
+import {emit, listen} from "@tauri-apps/api/event";
 import "./App.css";
 
 class MyOption {
@@ -8,9 +9,18 @@ class MyOption {
   label: string = "";
 }
 
+class Payload {
+  id: string = "";
+  report: number[] = [];
+  size: number = 0;
+}
+
+const ON_INPUT = "on_input";
+
 function App() {
   const [options, setOptions] = useState<MyOption[]>([]);
   const [productName, setProductName] = useState<string>("");
+  const [inputReport, setInputReport] = useState<string>("");
   
   async function enum_hid() {
     setOptions(await invoke("enum_hid"));
@@ -18,6 +28,13 @@ function App() {
 
   async function sel_hid(id: string) {
     setProductName(await invoke("sel_hid", {path: id}));
+
+    const unlisten = await listen<Payload>(ON_INPUT, (event) => {
+      let str = event.payload.report.reduce<string>((pv, cv) => {
+        return pv + `${cv.toString(16).padStart(2, "0")} `;
+      }, "");
+      setInputReport(str);
+    });
   }
 
   return (
@@ -51,6 +68,7 @@ function App() {
         </div>
       </div>
       <p>🤛{productName}🤜</p>
+      <p>{inputReport}</p>
     </div>
   );
 }
